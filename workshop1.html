@@ -1,0 +1,1943 @@
+<!DOCTYPE html>
+
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop 1: Welcome to Agentic AI World</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+        background: #1a1a2e;
+        color: #eee;
+        overflow: hidden;
+    }
+
+    .slide {
+        display: none;
+        width: 100vw;
+        height: 100vh;
+        padding: 40px 60px;
+        position: relative;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    }
+
+    .slide.active {
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Header with time badge */
+    .slide-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 30px;
+    }
+
+    .section-title {
+        font-size: 14px;
+        color: #ffc107;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 10px;
+    }
+
+    .slide-title {
+        font-size: 42px;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.2;
+    }
+
+    .time-badge {
+        background: linear-gradient(135deg, #e94560 0%, #ff6b6b 100%);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    /* Content area */
+    .slide-content {
+        flex: 1;
+        display: flex;
+        gap: 40px;
+        overflow: hidden;
+    }
+
+    .content-left, .content-right {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .content-full {
+        width: 100%;
+    }
+
+    /* Typography */
+    h2 {
+        font-size: 28px;
+        color: #4fc3f7;
+        margin-bottom: 20px;
+    }
+
+    h3 {
+        font-size: 22px;
+        color: #81d4fa;
+        margin: 20px 0 10px;
+    }
+
+    p {
+        font-size: 20px;
+        line-height: 1.6;
+        color: #ccc;
+        margin-bottom: 15px;
+    }
+
+    ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    li {
+        font-size: 20px;
+        line-height: 1.8;
+        color: #ccc;
+        padding-left: 30px;
+        position: relative;
+        margin-bottom: 10px;
+    }
+
+    li::before {
+        content: "▸";
+        position: absolute;
+        left: 0;
+        color: #4fc3f7;
+    }
+
+    .highlight {
+        color: #ffc107;
+        font-weight: 600;
+    }
+
+    .emphasis {
+        color: #4fc3f7;
+        font-weight: 600;
+    }
+
+    /* Cards */
+    .card-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .card-grid-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .card {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 12px;
+        padding: 24px;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .card-icon {
+        font-size: 40px;
+        margin-bottom: 15px;
+    }
+
+    .card-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 10px;
+    }
+
+    .card-desc {
+        font-size: 16px;
+        color: #aaa;
+        line-height: 1.5;
+    }
+
+    /* Tables */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
+
+    th, td {
+        padding: 15px 20px;
+        text-align: left;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    th {
+        background: rgba(79, 195, 247, 0.2);
+        color: #4fc3f7;
+        font-weight: 600;
+    }
+
+    td {
+        color: #ccc;
+    }
+
+    tr:hover td {
+        background: rgba(255,255,255,0.03);
+    }
+
+    /* Diagrams */
+    .diagram {
+        background: rgba(0,0,0,0.3);
+        border-radius: 16px;
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 300px;
+    }
+
+    .diagram-box {
+        background: linear-gradient(135deg, #4fc3f7 0%, #29b6f6 100%);
+        color: #1a1a2e;
+        padding: 15px 30px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 18px;
+        text-align: center;
+        margin: 10px;
+        min-width: 150px;
+    }
+
+    .diagram-box.orange {
+        background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    }
+
+    .diagram-box.green {
+        background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%);
+    }
+
+    .diagram-box.purple {
+        background: linear-gradient(135deg, #9c27b0 0%, #e91e63 100%);
+    }
+
+    .diagram-box.red {
+        background: linear-gradient(135deg, #e94560 0%, #ff6b6b 100%);
+        color: #fff;
+    }
+
+    .diagram-box.dark {
+        background: rgba(255,255,255,0.1);
+        color: #fff;
+        border: 2px dashed rgba(255,255,255,0.3);
+    }
+
+    .diagram-arrow {
+        font-size: 30px;
+        color: #4fc3f7;
+        margin: 5px 0;
+    }
+
+    .diagram-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .diagram-col {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Architecture diagram specific */
+    .arch-layer {
+        width: 100%;
+        padding: 15px;
+        border-radius: 10px;
+        margin: 8px 0;
+        text-align: center;
+    }
+
+    .arch-layer.ui {
+        background: linear-gradient(90deg, #4fc3f7 0%, #29b6f6 100%);
+        color: #1a1a2e;
+    }
+
+    .arch-layer.supervisor {
+        background: linear-gradient(90deg, #ffc107 0%, #ff9800 100%);
+        color: #1a1a2e;
+    }
+
+    .arch-layer.agents {
+        background: rgba(255,255,255,0.1);
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .arch-layer.tools {
+        background: rgba(76, 175, 80, 0.3);
+        border: 1px solid #4caf50;
+    }
+
+    .agent-box {
+        background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%);
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    /* Quote box */
+    .quote-box {
+        background: linear-gradient(135deg, rgba(79, 195, 247, 0.1) 0%, rgba(41, 182, 246, 0.1) 100%);
+        border-left: 4px solid #4fc3f7;
+        padding: 25px 30px;
+        margin: 20px 0;
+        border-radius: 0 12px 12px 0;
+    }
+
+    .quote-text {
+        font-size: 24px;
+        font-style: italic;
+        color: #fff;
+        line-height: 1.5;
+    }
+
+    .quote-author {
+        margin-top: 15px;
+        font-size: 16px;
+        color: #4fc3f7;
+    }
+
+    /* Progress bar */
+    .progress-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: rgba(255,255,255,0.1);
+    }
+
+    .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, #4fc3f7 0%, #e94560 100%);
+        transition: width 0.3s;
+    }
+
+    /* Navigation */
+    .nav-container {
+        position: fixed;
+        bottom: 20px;
+        right: 30px;
+        display: flex;
+        gap: 10px;
+        z-index: 100;
+    }
+
+    .nav-btn {
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.3s;
+    }
+
+    .nav-btn:hover {
+        background: rgba(255,255,255,0.2);
+    }
+
+    .slide-counter {
+        position: fixed;
+        bottom: 25px;
+        left: 30px;
+        font-size: 14px;
+        color: #666;
+    }
+
+    /* Cover slide special */
+    .cover-slide {
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 50%, #16213e 100%);
+    }
+
+    .cover-slide .workshop-badge {
+        background: linear-gradient(135deg, #e94560 0%, #ff6b6b 100%);
+        padding: 10px 30px;
+        border-radius: 30px;
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 30px;
+        display: inline-block;
+    }
+
+    .cover-slide .main-title {
+        font-size: 64px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        background: linear-gradient(135deg, #4fc3f7 0%, #e94560 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .cover-slide .subtitle {
+        font-size: 28px;
+        color: #aaa;
+        margin-bottom: 50px;
+    }
+
+    .cover-slide .meta {
+        font-size: 18px;
+        color: #666;
+    }
+
+    /* Agenda slide */
+    .agenda-item {
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+        margin: 10px 0;
+        background: rgba(255,255,255,0.03);
+        border-radius: 10px;
+        border-left: 4px solid transparent;
+        transition: all 0.3s;
+    }
+
+    .agenda-item:hover {
+        background: rgba(255,255,255,0.08);
+    }
+
+    .agenda-item.section-1 { border-left-color: #4fc3f7; }
+    .agenda-item.section-2 { border-left-color: #ffc107; }
+    .agenda-item.section-3 { border-left-color: #4caf50; }
+    .agenda-item.section-4 { border-left-color: #9c27b0; }
+    .agenda-item.section-5 { border-left-color: #e94560; }
+    .agenda-item.section-6 { border-left-color: #00bcd4; }
+
+    .agenda-time {
+        font-size: 14px;
+        color: #888;
+        min-width: 120px;
+    }
+
+    .agenda-title {
+        flex: 1;
+        font-size: 20px;
+        color: #fff;
+    }
+
+    .agenda-duration {
+        font-size: 14px;
+        color: #4fc3f7;
+        background: rgba(79, 195, 247, 0.1);
+        padding: 5px 12px;
+        border-radius: 15px;
+    }
+
+    /* Comparison boxes */
+    .comparison-container {
+        display: flex;
+        gap: 30px;
+        margin-top: 20px;
+    }
+
+    .comparison-box {
+        flex: 1;
+        background: rgba(255,255,255,0.05);
+        border-radius: 16px;
+        padding: 30px;
+        border: 2px solid transparent;
+    }
+
+    .comparison-box.pain {
+        border-color: #e94560;
+    }
+
+    .comparison-box.solution {
+        border-color: #4caf50;
+    }
+
+    .comparison-box h3 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* Flow diagram */
+    .flow-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+        padding: 20px;
+    }
+
+    .flow-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .flow-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 36px;
+        margin-bottom: 10px;
+    }
+
+    .flow-icon.think { background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%); }
+    .flow-icon.act { background: linear-gradient(135deg, #4caf50 0%, #8bc34a 100%); }
+    .flow-icon.observe { background: linear-gradient(135deg, #ff9800 0%, #ffc107 100%); }
+
+    .flow-label {
+        font-size: 16px;
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .flow-arrow {
+        font-size: 30px;
+        color: #4fc3f7;
+    }
+
+    /* Runtime spectrum */
+    .spectrum-container {
+        display: flex;
+        margin: 30px 0;
+        position: relative;
+    }
+
+    .spectrum-item {
+        flex: 1;
+        padding: 25px;
+        text-align: center;
+        position: relative;
+    }
+
+    .spectrum-item::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 2px;
+        height: 100%;
+        background: rgba(255,255,255,0.1);
+    }
+
+    .spectrum-item:last-child::after {
+        display: none;
+    }
+
+    .spectrum-icon {
+        font-size: 48px;
+        margin-bottom: 15px;
+    }
+
+    .spectrum-title {
+        font-size: 22px;
+        color: #fff;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .spectrum-examples {
+        font-size: 14px;
+        color: #888;
+        margin-bottom: 15px;
+    }
+
+    .spectrum-pros {
+        font-size: 14px;
+        color: #4caf50;
+    }
+
+    .spectrum-cons {
+        font-size: 14px;
+        color: #e94560;
+    }
+
+    /* Framework comparison */
+    .framework-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .framework-card {
+        background: rgba(255,255,255,0.05);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        border: 2px solid transparent;
+        transition: all 0.3s;
+    }
+
+    .framework-card:hover {
+        border-color: #4fc3f7;
+        transform: translateY(-5px);
+    }
+
+    .framework-card.recommended {
+        border-color: #ffc107;
+        background: rgba(255, 193, 7, 0.1);
+    }
+
+    .framework-logo {
+        font-size: 40px;
+        margin-bottom: 15px;
+    }
+
+    .framework-name {
+        font-size: 18px;
+        color: #fff;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .framework-desc {
+        font-size: 13px;
+        color: #888;
+        line-height: 1.5;
+    }
+
+    .framework-tag {
+        display: inline-block;
+        background: #ffc107;
+        color: #1a1a2e;
+        padding: 3px 10px;
+        border-radius: 10px;
+        font-size: 11px;
+        font-weight: 600;
+        margin-top: 10px;
+    }
+
+    /* Section divider */
+    .section-divider {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .section-divider .section-number {
+        font-size: 120px;
+        font-weight: 700;
+        opacity: 0.1;
+        position: absolute;
+    }
+
+    .section-divider .section-name {
+        font-size: 48px;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 20px;
+    }
+
+    .section-divider .section-desc {
+        font-size: 24px;
+        color: #888;
+    }
+
+    /* Protocol comparison */
+    .protocol-compare {
+        display: flex;
+        gap: 40px;
+        margin-top: 30px;
+    }
+
+    .protocol-box {
+        flex: 1;
+        background: rgba(255,255,255,0.05);
+        border-radius: 16px;
+        padding: 30px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .protocol-box::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+    }
+
+    .protocol-box.mcp::before {
+        background: linear-gradient(90deg, #4fc3f7 0%, #29b6f6 100%);
+    }
+
+    .protocol-box.a2a::before {
+        background: linear-gradient(90deg, #ffc107 0%, #ff9800 100%);
+    }
+
+    .protocol-title {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .protocol-box.mcp .protocol-title { color: #4fc3f7; }
+    .protocol-box.a2a .protocol-title { color: #ffc107; }
+
+    .protocol-subtitle {
+        font-size: 16px;
+        color: #888;
+        margin-bottom: 20px;
+    }
+
+    /* Checklist */
+    .checklist {
+        list-style: none;
+    }
+
+    .checklist li {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 20px;
+        background: rgba(255,255,255,0.03);
+        border-radius: 10px;
+        margin: 10px 0;
+    }
+
+    .checklist li::before {
+        content: "☐";
+        font-size: 24px;
+        color: #4fc3f7;
+    }
+
+    .checklist li.required::before {
+        content: "✓";
+        color: #4caf50;
+    }
+
+    /* Homework cards */
+    .homework-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+        margin-top: 20px;
+    }
+
+    .homework-card {
+        background: rgba(255,255,255,0.05);
+        border-radius: 16px;
+        padding: 25px;
+        border-left: 4px solid;
+    }
+
+    .homework-card:nth-child(1) { border-left-color: #4fc3f7; }
+    .homework-card:nth-child(2) { border-left-color: #ffc107; }
+    .homework-card:nth-child(3) { border-left-color: #4caf50; }
+    .homework-card:nth-child(4) { border-left-color: #e94560; }
+
+    .homework-number {
+        font-size: 14px;
+        color: #888;
+        margin-bottom: 10px;
+    }
+
+    .homework-title {
+        font-size: 20px;
+        color: #fff;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .homework-desc {
+        font-size: 15px;
+        color: #aaa;
+        line-height: 1.6;
+    }
+
+    /* Thank you slide */
+    .thankyou-slide {
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .thankyou-slide .big-text {
+        font-size: 72px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #4fc3f7 0%, #e94560 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 30px;
+    }
+
+    .next-workshop {
+        background: rgba(255,255,255,0.05);
+        border-radius: 16px;
+        padding: 30px 50px;
+        margin-top: 30px;
+    }
+
+    .next-workshop h3 {
+        color: #ffc107;
+        margin-bottom: 15px;
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .slide.active .slide-header,
+    .slide.active .slide-content > * {
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .slide.active .slide-content > *:nth-child(1) { animation-delay: 0.1s; }
+    .slide.active .slide-content > *:nth-child(2) { animation-delay: 0.2s; }
+    .slide.active .slide-content > *:nth-child(3) { animation-delay: 0.3s; }
+
+    /* Code block */
+    .code-block {
+        background: #0d1117;
+        border-radius: 10px;
+        padding: 20px;
+        font-family: 'Consolas', 'Monaco', monospace;
+        font-size: 14px;
+        line-height: 1.6;
+        overflow-x: auto;
+        margin: 15px 0;
+    }
+
+    .code-block .comment { color: #8b949e; }
+    .code-block .keyword { color: #ff7b72; }
+    .code-block .string { color: #a5d6ff; }
+    .code-block .function { color: #d2a8ff; }
+</style>
+```
+
+</head>
+<body>
+    <!-- Slide 0: Cover -->
+    <div class="slide cover-slide active">
+        <div class="workshop-badge">Workshop 1 | 26W06</div>
+        <h1 class="main-title">Welcome to Agentic AI World</h1>
+        <p class="subtitle">概念建立 × 平台願景 × 標準共識</p>
+        <div class="meta">
+            <p>2/5 (二) 16:00~18:00</p>
+            <p style="margin-top: 10px; color: #4fc3f7;">AAIF Task Force</p>
+        </div>
+    </div>
+
+```
+<!-- Slide 1: Agenda -->
+<div class="slide">
+    <div class="slide-header">
+        <div>
+            <div class="section-title">Overview</div>
+            <h1 class="slide-title">今日議程</h1>
+        </div>
+        <div class="time-badge">2 小時</div>
+    </div>
+    <div class="slide-content">
+        <div class="content-full">
+            <div class="agenda-item section-1">
+                <span class="agenda-time">16:00 - 16:15</span>
+                <span class="agenda-title">AAIF 平台願景與痛點分析</span>
+                <span class="agenda-duration">15 min</span>
+            </div>
+            <div class="agenda-item section-2">
+                <span class="agenda-time">16:15 - 16:45</span>
+                <span class="agenda-title">Agentic AI 核心概念</span>
+                <span class="agenda-duration">30 min</span>
+            </div>
+            <div class="agenda-item section-3">
+                <span class="agenda-time">16:45 - 17:15</span>
+                <span class="agenda-title">技術架構：MCP vs. A2A 的分工</span>
+                <span class="agenda-duration">30 min</span>
+            </div>
+            <div class="agenda-item section-4">
+                <span class="agenda-time">17:15 - 17:25</span>
+                <span class="agenda-title">☕ 休息</span>
+                <span class="agenda-duration">10 min</span>
+            </div>
+            <div class="agenda-item section-4">
+                <span class="agenda-time">17:25 - 17:45</span>
+                <span class="agenda-title">介紹 AAIF 平台</span>
+                <span class="agenda-duration">20 min</span>
+            </div>
+            <div class="agenda-item section-5">
+                <span class="agenda-time">17:45 - 17:55</span>
+                <span class="agenda-title">建立上線標準共識</span>
+                <span class="agenda-duration">10 min</span>
+            </div>
+            <div class="agenda-item section-6">
+                <span class="agenda-time">17:55 - 18:00</span>
+                <span class="agenda-title">回家作業</span>
+                <span class="agenda-duration">5 min</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section 1: Vision & Pain Points -->
+<div class="slide section-divider" style="background: linear-gradient(135deg, #1a1a2e 0%, #0a2351 100%);">
+    <span class="section-number">01</span>
+    <div class="section-name">AAIF 平台願景與痛點分析</div>
+    <div class="section-desc">為什麼我們需要 AAIF？</div>
+    <div class="time-badge" style="position: absolute; top: 40px; right: 60px;">15 分鐘</div>
+</div>
+
+<!-- Slide 2: Pain Points -->
+<div class="slide">
+    <div class="slide-header">
+        <div>
+            <div class="section-title">Section 1 · 願景與痛點</div>
+            <h1 class="slide-title">我們面臨的雙重痛點</h1>
+        </div>
+        <div class="time-badge">16:00-16:15</div>
+    </div>
+    <div class="slide-content">
+        <div class="comparison-container">
+            <div class="comparison-box pain">
+                <h3>😫 對使用者的痛點</h3>
+                <h2 style="color: #e94560;">破碎的體驗</h2>
+                <ul>
+                    <li>查 JIRA 開一個視窗</li>
+                    <li>問 Wiki 又開一個視窗</li>
+                    <li>看 ALM 再開一個視窗</li>
+                </ul>
+                <div class="quote-box" style="margin-top: 20px; border-left-color: #e94560;">
+                    <p style="font-size: 18px; color: #e94560;">各系統容易變成資訊孤島<br>缺乏統一的 AI 入口</p>
+                </div>
+            </div>
+            <div class="comparison-box pain">
+                <h3>😩 對開發者的痛點</h3>
+                <h2 style="color: #e94560;">重複造輪子</h2>
+                <ul>
+                    <li>自己寫前端 UI</li>
+                    <li>自己搞登入驗證</li>
+                    <li>自己處理對話紀錄</li>
+                    <li>自己做 Streaming 顯示</li>
+                </ul>
+                <div class="quote-box" style="margin-top: 20px; border-left-color: #e94560;">
+                    <p style="font-size: 18px; color: #e94560;">60% 時間花在與 Agent 核心邏輯<br>無關的事情上</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 3: Vision -->
+<div class="slide">
+    <div class="slide-header">
+        <div>
+            <div class="section-title">Section 1 · 願景與痛點</div>
+            <h1 class="slide-title">AAIF 的價值主張</h1>
+        </div>
+        <div class="time-badge">16:00-16:15</div>
+    </div>
+    <div class="slide-content">
+        <div class="content-full">
+            <div class="quote-box" style="text-align: center; margin-bottom: 40px;">
+                <p class="quote-text">"One Interface, Connect All"</p>
+                <p class="quote-author">一個介面，連接所有</p>
+            </div>
+            <div class="card-grid">
+                <div class="card" style="border-top: 4px solid #4fc3f7;">
+                    <div class="card-icon">👤</div>
+                    <div class="card-title">For Users</div>
+                    <h3 style="color: #4fc3f7; font-size: 28px;">One Interface</h3>
+                    <p class="card-desc">無論後端是哪個單位的 Agent<br>使用者只面對一個入口</p>
+                </div>
+                <div class="card" style="border-top: 4px solid #ffc107;">
+                    <div class="card-icon">👨‍💻</div>
+                    <div class="card-title">For Developers</div>
+                    <h3 style="color: #ffc107; font-size: 28px;">Focus on Logic, Free on Framework</h3>
+                    <p class="card-desc">平台幫你搞定 UI 和流量入口<br>你專注開發 Agent 的核心邏輯（大腦）</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section 2: Core Concepts -->
+<div class="slide section-divider" style="background: linear-gradient(135deg, #1a1a2e 0%, #1a3a1a 100%);">
+    <span class="section-number">02</span>
+    <div class="section-name">Agentic AI 核心概念</div>
+    <div class="section-desc">什麼是 Agent？它跟 ChatGPT 有什麼不同？</div>
+    <div class="time-badge" style="position: absolute; top: 40px; right: 60px;">30 分鐘</div>
+</div>
+
+<!-- Slide 4: What is Agent -->
+<div class="slide">
+    <div class="slide-header">
+        <div>
+            <div class="section-title">Section 2 · 核心概念</div>
+            <h1 class="slide-title">什麼是 Agent？</h1>
+        </div>
+        <div class="time-badge">16:15-16:45</div>
+    </div>
+    <div class="slide-content">
+        <div class="content-left">
+            <div class="quote-box">
+                <p class="quote-text">Agent = 指令 + 護欄 + 工具</p>
+                <p class="quote-author">— OpenAI Definition</p>
+            </div>
+            <table style="margin-top: 30px;">
+                <tr>
+                    <th>組成</th>
+                    <th>說明</th>
+                    <th>範例</th>
+                </tr>
+                <tr>
+                    <td><span class="emphasis">指令 (Instructions)</span></td>
+                    <td>Agent 該做什麼</td>
+                    <td>「你是 JIRA 專家，負責查詢和更新 issue」</td>
+                </tr>
+                <tr>
+                    <td><span class="emphasis">護欄 (Guardrails)</span></td>
+                    <td>Agent 不該做什麼</td>
+                    <td>「不能刪除 issue」「不能存取其他專案」</td>
+                </tr>
+                <tr>
+                    <td><span class="emphasis">工具 (Tools)</span></td>
+                    <td>Agent 能做什麼</td>
+                    <td>呼叫 JIRA API、查詢資料庫</td>
+                </tr>
+            </table>
+        </div>
+        <div class="content-right">
+            <div class="diagram">
+                <div class="diagram-box" style="font-size: 24px; padding: 20px 40px;">🤖 Agent</div>
+                <div class="diagram-arrow">↓</div>
+                <div class="diagram-row">
+                    <div class="diagram-box purple" style="font-size: 14px;">📋 指令</div>
+                    <div class="diagram-box red" style="font-size: 14px;">🛡️ 護欄</div>
+                    <div class="diagram-box green" style="font-size: 14px;">🔧 工具</div>
+                </div>
+                <p style="margin-top: 30px; color: #888; font-size: 16px;">這三件事，是各個開發團隊要負責的部分</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 5: ChatGPT vs Agent -->
+<div class="slide">
+    <div class="slide-header">
+        <div>
+            <div class="section-title">Section 2 · 核心概念</div>
+            <h1 class="slide-title">傳統 ChatGPT vs. Agent</h1>
+        </div>
+        <div class="time-badge">16:15-16:45</div>
+    </div>
+    <div class="slide-content">
+        <div class="comparison-container">
+            <div class="comparison-box" style="border-color: #888;">
+                <h3>💬 傳統 ChatGPT</h3>
+                <h2 style="color: #888;">回答問題</h2>
+                <div class="diagram" style="min-height: 200px; margin-top: 20px;">
+                    <div class="diagram-row">
+                        <div class="diagram-box dark">User</div>
+                        <div class="diagram-arrow">→</div>
+                        <div class="diagram-box dark">Prompt</div>
+                        <div class="diagram-arrow">→</div>
+                        <div class="diagram-box dark">LLM</div>
+                        <div class="diagram-arrow">→</div>
+                        <div class="diagram-box dark">Response</div>
+                    </div>
+                </div>
+                <p style="text-align: center; margin-top: 20px; color: #888;">單次互動 · 無狀態 · 被動</p>
+            </div>
+            <div class="comparison-box solution">
+                <h3>🤖 Agentic AI</h3>
+                <h2 style="color: #4caf50;">執行動作</h2>
+                <div class="diagram" style="min-height: 200px; margin-top: 20px;">
+                    <div class="diagram-col">
+                        <div class="diagram-box green">User</div>
+                        <div class="diagram-arrow">↓</div>
+                        <div class="diagram-box orange">Agent</div>
+                        <div class="diagram-arrow">↓</div>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div class="diagram-box purple" style="font-size: 12px;">Think</div>
+                            <span style="color: #4fc3f7;">→</span>
+                            <div class="diagram-box green" style="font-size: 12px;">Act</div>
+                            <span style="color: #4fc3f7;">→</span>
+                            <div class="diagram-box orange" style="font-size: 12px;">Observe</div>
+                            <span style="color: #4fc3f7;">↻</span>
+                        </div>
+                    </div>
+                </div>
+                <p style="text-align: center; margin-top: 20px; color: #4caf50;">多輪迭代 · 有狀態 · 主動</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 6: ReAct Pattern -->
+<div class="slide">
+    <div class="slide-header">
+        <div>
+            <div class="section-title">Section 2 · 核心概念</div>
+            <h1 class="slide-title">ReAct 模式：Agent 如何思考</h1>
+        </div>
+        <div class="time-badge">16:15-16:45</div>
+    </div>
+    <div class="slide-content">
+        <div class="content-left">
+            <h2>旅行打包類比 🧳</h2>
+            <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 25px; margin-top: 20px;">
+                <div style="display: flex; align-items: center; gap: 15px; margin: 15px 0;">
+                    <span style="background: #9c27b0; padding: 8px 15px; border-radius: 20px;">💭 Thought</span>
+                    <span style="color: #ccc;">「天氣會怎樣？」</span>
+                </div>
+                <div class="diagram-arrow" style="text-align: center;">↓</div>
+                <div style="display: flex; align-items: center; gap: 15px; margin: 15px 0;">
+                    <span style="background: #4caf50; padding: 8px 15px; border-radius: 20px;">⚡ Action</span>
+                    <span style="color: #ccc;">查天氣預報</span>
+                </div>
+                <div class="diagram-arrow" style="text-align: center;">↓</div>
+                <div style="display: flex; align-items: center; gap: 15px; margin: 15px 0;">
+                    <span style="background: #ff9800; padding: 8px 15px; border-radius: 20px;">👁️ Observation</span>
+                    <span style="color: #ccc;">「會很冷」</span>
+                </div>
+                <div class="diagram-arrow" style="text-align: center;">↓</div>
+                <div style="display: flex; align-items: center; gap: 15px; margin: 15px 0;">
+                    <span style="background: #9c27b0; padding: 8px 15px; border-radius: 20px;">💭 Thought</span>
+                    <span style="color: #ccc;">「我有什麼保暖衣物？」</span>
+                </div>
+                <div class="diagram-arrow" style="text-align: center;">↓</div>
+                <div style="display: flex; align-items: center; gap: 15px; margin: 15px 0;">
+                    <span style="background: #4caf50; padding: 8px 15px; border-radius: 20px;">⚡ Action</span>
+                    <span style="color: #ccc;">檢查衣櫃</span>
+                </div>
+            </div>
+        </div>
+        <div class="content-right">
+            <div class="diagram" style="height: 100%;">
+                <h3 style="color: #4fc3f7; margin-bottom: 30px;">ReAct = Reasoning + Acting</h3>
+                <div style="position: relative; width: 280px; height: 280px;">
+                    <div style="position: absolute; top: 0; left: 50%; transform: translateX(-50%);">
+                        <div class="flow-icon think">💭</div>
+                        <div class="flow-label">Thought</div>
+                    </div>
+                    <div style="position: absolute; bottom: 30px; left: 0;">
+                        <div class="flow-icon observe">👁️</div>
+                        <div class="flow-label">Observe</div>
+                    </div>
+                    <div style="position: absolute; bottom: 30px; right: 0;">
+                        <div class="flow-icon act">⚡</div>
+                        <div class="flow-label">Action</div>
+                    </div>
+                    <!-- Arrows -->
+                    <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" viewBox="0 0 280 280">
+                        <defs>
+                            <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                <polygon points="0 0, 10 3.5, 0 7" fill="#4fc3f7" />
+                            </marker>
+                        </defs>
+                        <path d="M 170 70 Q 220 120 200 180" stroke="#4fc3f7" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                        <path d="M 170 220 Q 140 240 80 220" stroke="#4fc3f7" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                        <path d="M 50 180 Q 30 120 100 70" stroke="#4fc3f7" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+                    </svg>
+                </div>
+                <p style="color: #888; margin-top: 30px; font-size: 16px;">透過外部資訊接地，減少 LLM 幻覺</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 7: Agent Runtime -->
+<div class="slide">
+    <div class="slide-header">
+        <div>
+            <div class="section-title">Section 2 · 核心概念</div>
+            <h1 class="slide-title">Agent 依 Runtime 分類</h1>
+        </div>
+        <div class="time-badge">16:15-16:45</div>
+    </div>
+    <div class="slide-content">
+        <div class="content-full">
+            <div class="spectrum-container">
+                <div class="spectrum-item" style="background: linear-gradient(180deg, rgba(79,195,247,0.2) 0%, transparent 100%);">
+                    <div class="spectrum-icon">💻</div>
+                    <div class="spectrum-title">本機端 Agent</div>
+                    <div class="spectrum-examples">Claude Code, Cursor</div>
+                    <div class="spectrum-pros">✓ 隱私好、延遲低</div>
+                    <div class="spectrum-cons">✗ 運算受限</div>
+                </div>
+                <div class="spectrum-item" style="background: linear-gradient(180deg, rgba(255,193,7,0.2) 0%, transparent 100%);">
+                    <div class="spectrum-icon">🔀</div>
+                    <div class="spectrum-title">混合 Agent</div>
+                    <div class="spectrum-examples">Copilot, 本機+雲端</div>
+                    <div class="spectrum-pros">✓ 兩者優點兼具</div>
+                    <div class="spectrum-cons">✗ 架構較複雜</div>
+                </div>
+                <div class="spectrum-item" style="background: linear-gradient(180deg, rgba(233,69,96,0.2) 0%, transparent 100%);">
+                    <div class="spectrum-icon">☁️</div>
+                    <div class="spectrum-title">遠端 Agent</div>
+                    <div class="spectrum-examples">AAIF, Agentforce</div>
+                    <div class="spectrum-pros">✓ 治理、擴展、協作</div>
+                    <div class="spectrum-cons">✗ 資料離開本機</div>
+                </div>
+            </div>
+            <div class="quote-box" style="margin-top: 30px;">
+                <p style="font-size: 20px; color: #fff;">
+                    <span class="emphasis">Claude Code</span> 是你的<span class="highlight">個人助理</span>，
+                    <span class="emphasis">AAIF</span> 是公司的<span class="highlight">服務台</span>
+                    — 兩者解決不同層次的問題
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 8: AAIF Role -->
+<div class="slide">
+    <div class="slide-header">
+        <div>
+            <div class="section-title">Section 2 · 核心概念</div>
+            <h1 class="slide-title">AAIF 的角色：App Store + OS</h1>
+        </div>
+        <div class="time-badge">16:15-16:45</div>
+    </div>
+    <div class="slide-content">
+        <div class="content-left">
+            <h2>類比理解</h2>
+            <table style="margin-top: 20px;">
+                <tr>
+                    <th>類比</th>
+                    <th>Agent</th>
+                    <th>AAIF</th>
+                </tr>
+                <tr>
+                    <td>📱 手機生態</td>
+                    <td>App</td>
+                    <td>App Store + iOS</td>
+                </tr>
+                <tr>
+                    <td>🏢 職場</td>
+                    <td>專業員工</td>
+                    <td>HR + 辦公室</td>
+                </tr>
+                <tr>
+                    <td>🎼 交響樂</td>
+                    <td>樂手</td>
+                    <td>指揮家 + 音樂廳</td>
+                </tr>
+            </table>
+            <div class="quote-box" style="margin-top: 30px;">
+                <p style="font-size: 18px;">AAIF 不限制你怎麼寫 Agent<br>但提供統一的發布平台、使用者介面<br>還有一個聰明的 <span class="highlight">Supervisor</span> 幫你分派任務</p>
+            </div>
+        </div>
+        <div class="content-right">
+            <div class="diagram" style="height: 100%;">
+                <div style="width: 100%;">
+                    <div class="arch-layer ui">
+                        <strong>🌐 Open WebUI</strong>
+                        <br><small>統一使用者介面</small>
+                    </div>
+                    <div class="diagram-arrow">↕️</div>
+                    <div class="arch-layer supervisor">
+                        <strong>🧠 Supervisor / Orchestrator</strong>
+                        <br><small>意圖辨識 + 任務分派</small>
+                    </div>
+                    <div class="diagram-arrow">↕️</div>
+                    <div class="arch-layer agents">
+                        <div class="agent-box">JIRA Agent<br><small>Team A</small></div>
+                        <div class="agent-box">Wiki Agent<br><small>Team B</small></div>
+                        <div class="agent-box">ALM Agent<br><small>Team C</small></div>
+                        <div class="agent-box" style="background: linear-gradient(135deg, #666 0%, #888 100%);">Your Agent<br><small>Your Team</small></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section 3: MCP vs A2A -->
+<div class="slide section-divider" style="background: linear-gradient(135deg, #1a1a2e 0%, #2d1a4a 100%);">
+    <span class="section-number">03</span>
+    <div class="section-name">技術架構：MCP vs. A2A</div>
+    <div class="section-desc">兩個協定各自解決什麼問題？</div>
+    <div class="time-badge" style="position: absolute; top: 40px; right: 60px;">30 分鐘</div>
+</div>
+
+<!-- Slide 9: Two Problems -->
+<div class="slide">
+    <div class="slide-header">
+        <div>
+            <div class="section-title">Section 3 · MCP vs. A2A</div>
+            <h1 class="slide-title">兩個不同層次的問題</h1>
+        </div>
+        <div class="time-badge">16:45-17:15</div>
+    </div>
+    <div class="slide-content">
+        <div class="content-full">
+            <div class="diagram" style="min-height: auto; padding: 40px;">
+                <div style="width: 100%; max-width: 900px;">
+                    <!-- UI Layer -->
+                    <div style="background: linear-gradient(90deg, #4fc3f7, #29b6f6); padding: 15px; border-radius: 10px; text-align: center; color: #1a1a2e; font-weight: 600;">
+                        🌐 使用者介面層 (Open WebUI)
+                    </div>
+                    <div style="text-align: center; color: #ffc107; font-size: 14px; margin: 10px 0;">↕️ A2A Protocol</div>
+                    
+                    <!-- Supervisor Layer -->
+                    <div style="background: linear-gradient(90deg, #ffc107, #ff9800); padding: 15px; border-radius: 10px; text-align: center; color: #1a1a2e; font-weight: 600;">
+                        🧠 Supervisor / Orchestrator
+                    </div>
+                    <div style="text-align: center; color: #ffc107; font-size: 14px; margin: 10px 0;">↕️ A2A Protocol</div>
+                    
+                    <!-- Agents Layer -->
+                    <div style="display: flex; justify-content: center; gap: 20px; margin: 15px 0;">
+                        <div style="background: #9c27b0; padding: 15px 25px; border-radius: 10px; text-align: center;">
+                            <div style="font-weight: 600;">JIRA Agent</div>
+                            <small style="opacity: 0.8;">LangChain</small>
+                        </div>
+                        <div style="background: #9c27b0; padding: 15px 25px; border-radius: 10px; text-align: center;">
+                            <div style="font-weight: 600;">Wiki Agent</div>
+                            <small style="opacity: 0.8;">LangChain</small>
+                        </div>
+                        <div style="background: #9c27b0; padding: 15px 25px; border-radius: 10px; text-align: center;">
+                            <div style="font-weight: 600;">ALM Agent</div>
+                            <small style="opacity: 0.8;">Semantic Kernel</small>
+                        </div>
+                    </div>
+                    <div style="text-align: center; color: #4caf50; font-size: 14px; margin: 10px 0;">↕️ MCP Protocol</div>
+                    
+                    <!-- Tools Layer -->
+                    <div style="display: flex; justify-content: center; gap: 20px;">
+                        <div style="background: rgba(76,175,80,0.3); border: 1px solid #4caf50; padding: 12px 25px; border-radius: 10px;">JIRA API</div>
+                        <div style="background: rgba(76,175,80,0.3); border: 1px solid #4caf50; padding: 12px 25px; border-radius: 10px;">Wiki API</div>
+                        <div style="background: rgba(76,175,80,0.3); border: 1px solid #4caf50; padding: 12px 25px; border-radius: 10px;">ALM API</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 10: MCP -->
+<div class="slide">
+    <div class="slide-header">
+        <div>
+            <div class="section-title">Section 3 · MCP vs. A2A</div>
+            <h1 class="slide-title">MCP：解決 N×M 問題</h1>
+        </div>
+        <div class="time-badge">16:45-17:15</div>
+    </div>
+    <div class="slide-content">
+        <div class="content-left">
+            <h2>Model Context Protocol</h2>
+            <p>Anthropic 2024 年 11 月推出，現由 Linux Foundation 管理</p>
+            
+            <h3>解決什麼問題？</h3>
+            <p><span class="emphasis">Agent 怎麼連接工具和資料？</span></p>
+            
+            <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin: 20px 0;">
+                <p style="margin-bottom: 15px;"><strong>沒有 MCP：</strong></p>
+                <p style="color: #e94560;">5 個 Agent × 10 種工具 = <strong>50</strong> 個客製整合 ❌</p>
+                <p style="margin: 15px 0;"><strong>有了 MCP：</strong></p>
+                <p style="color: #4caf50;">5 + 10 = <strong>15</strong> 個標準實作 ✓</p>
+            </div>
+
+            <div class="quote-box">
+                <p style="font-size: 16px;">類比：<span class="highlight">USB 標準</span><br>讓各種設備能插上電腦</p>
+            </div>
+        </div>
+        <div class="content-right">
+            <div class="diagram" style="height: 100%;">
+                <h3 style="color: #4fc3f7; margin-bottom: 20px;">MCP 架構</h3>
+                <div style="width: 100%;">
+                    <div style="background: rgba(79,195,247,0.2); border: 2px solid #4fc3f7; border-radius: 10px; padding: 15px; margin-bottom: 15px;">
+                        <div style="text-align: center; font-weight: 600; color: #4fc3f7;">MCP Host</div>
+                        <small style="color: #888; display: block; text-align: center;">Claude Desktop, VS Code, Cursor</small>
+                        <div style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
+                            <div style="background: #4fc3f7; color: #1a1a2e; padding: 5px 15px; border-radius: 5px; font-size: 12px;">Client</div>
+                            <div style="background: #4fc3f7; color: #1a1a2e; padding: 5px 15px; border-radius: 5px; font-size: 12px;">Client</div>
+                            <div style="background: #4fc3f7; color: #1a1a2e; padding: 5px 15px; border-radius: 5px; font-size: 12px;">Client</div>
+                        </div>
+                    </div>
+                    <div style="text-align: center; color: #4fc3f7; font-size: 12px;">JSON-RPC 2.0</div>
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        <div style="flex: 1; background: rgba(76,175,80,0.2); border: 1px solid #4caf50; border-radius: 10px; padding: 15px; text-align: center;">
+                            <div style="font-size: 24px;">🔧</div>
+                            <div style="font-size: 14px; font-weight: 600;">Server</div>
+                            <small style="color: #888;">GitHub</small>
+                            <div style="font-size: 11px; color: #4caf50; margin-top: 5px;">Tools · Resources · Prompts</div>
+                        </div>
+                        <div style="flex: 1; background: rgba(76,175,80,0.2); border: 1px solid #4caf50; border-radius: 10px; padding: 15px; text-align: center;">
+                            <div style="font-size: 24px;">🗄️</div>
+                            <div style="font-size: 14px; font-weight: 600;">Server</div>
+                            <small style="color: #888;">Database</small>
+                            <div style="font-size: 11px; color: #4caf50; margin-top: 5px;">Tools · Resources · Prompts</div>
+                        </div>
+                        <div style="flex: 1; background: rgba(76,175,80,0.2); border: 1px solid #4caf50; border-radius: 10px; padding: 15px; text-align: center;">
+                            <div style="font-size: 24px;">📁</div>
+                            <div style="font-size: 14px; font-weight: 600;">Server</div>
+                            <small style="color: #888;">Filesystem</small>
+                            <div style="font-size: 11px; color: #4caf50; margin-top: 5px;">Tools · Resources · Prompts</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 11: A2A -->
+<div class="slide">
+    <div class="slide-header">
+        <div>
+            <div class="section-title">Section 3 · MCP vs. A2A</div>
+            <h1 class="slide-title">A2A：解決「自由開發」</h1>
+        </div>
+        <div class="time-badge">16:45-17:15</div>
+    </div>
+    <div class="slide-content">
+        <div class="content-left">
+            <h2>Agent-to-Agent Protocol</h2>
+            <p>Google 2025 年 4 月推出，150+ 組織支援，Linux Foundation 託管</p>
+            
+            <h3>解決什麼問題？</h3>
+            <p><span class="emphasis">不同 Agent 之間怎麼溝通？<br>Agent 怎麼被平台發現和調度？</span></p>
+            
+            <div style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; margin: 20px 0;">
+                <p><strong>AAIF 採用 A2A 的意義：</strong></p>
+                <ul style="margin-top: 10px;">
+                    <li>用 <span class="highlight">LangChain</span> 開發？可以！</li>
+                    <li>用 <span class="highlight">Semantic Kernel</span>？可以！</li>
+                    <li>用 <span class="highlight">CrewAI</span>？可以！</li>
+                    <li>自己從頭寫？也可以！</li>
+                </ul>
+            </div>
+
+            <div class="quote-box">
+                <p style="font-size: 16px;">類比：<span class="highlight">HTTP 標準</span><br>讓各種網站能互相連結</p>
+            </div>
+        </div>
+        <div class="content-right">
+            <div class="diagram" style="height: 100%;">
+                <h3 style="color: #ffc107; margin-bottom: 20px;">A2A 核心組件</h3>
+                <div style="width: 100%;">
+                    <div style="background: rgba(255,193,7,0.2); border: 2px solid #ffc107; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                        <div style="text-align: center; font-weight: 600; color: #ffc107; font-size: 20px;">Agent Card</div>
+                        <small style="color: #888; display: block; text-align: center; margin-top: 5px;">/.well-known/agent.json</small>
+                        <p style="color: #ccc; font-size: 14px; margin-top: 15px; text-align: center;">發布 Agent 能力的 JSON 檔案<br>讓 Supervisor 能「發現」你</p>
+                    </div>
+                    <div style="display: flex; gap: 15px;">
+                        <div style="flex: 1; background: rgba(255,193,7,0.1); border: 1px solid #ffc107; border-radius: 10px; padding: 15px; text-align: center;">
+                            <div style="font-size: 24px;">📋</div>
+                            <div style="font-size: 14px; font-weight: 600; color: #ffc107;">Tasks</div>
+                            <small style="color: #888;">Agent 間的工作單元</small>
+                        </div>
+                        <div style="flex: 1; background: rgba(255,193,7,0.1); border: 1px solid #ffc107; border-radius: 10px; padding: 15px; text-align: center;">
+                            <div style="font-size: 24px;">📦</div>
+                            <div style="font-size: 14px; font-weight: 600; color: #ffc107;">Artifacts</div>
+                            <small style="color: #888;">交付物（文件、資料）</small>
+                        </div>
+                    </div>
+                    <p style="text-align: center; color: #888; margin-top: 20px; font-size: 14px;">JSON-RPC 2.0 over HTTPS · 短期 Token 認證</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 12: Protocol Summary -->
+<div class="slide">
+    <div class="slide-header">
+        <div>
+            <div class="section-title">Section 3 · MCP vs. A2A</div>
+            <h1 class="slide-title">兩個協定的分工總結</h1>
+        </div>
+        <div class="time-badge">16:45-17:15</div>
+    </div>
+    <div class="slide-content">
+        <div class="content-full">
+            <div class="protocol-compare">
+                <div class="protocol-box mcp">
+                    <div class="protocol-title">MCP</div>
+                    <div class="protocol-subtitle">Model Context Protocol</div>
+                    <table>
+                        <tr><td><strong>解決</strong></td><td>Agent 連接工具/資料</td></tr>
+                        <tr><td><strong>類比</strong></td><td>🔌 USB 標準</td></tr>
+                        <tr><td><strong>誰用</strong></td><td>Agent 開發者</td></tr>
+                        <tr><td><strong>訊息</strong></td><td>連接資料源時，請用 MCP</td></tr>
+                    </table>
+                </div>
+                <div class="protocol-box a2a">
+                    <div class="protocol-title">A2A</div>
+                    <div class="protocol-subtitle">Agent-to-Agent Protocol</div>
+                    <table>
+                        <tr><td><strong>解決</strong></td><td>Agent 連接平台/其他 Agent</td></tr>
+                        <tr><td><strong>類比</strong></td><td>🌐 HTTP 標準</td></tr>
+                        <tr><td><strong>誰用</strong></td><td>平台 & Agent 開發者</td></tr>
+                        <tr><td><strong>訊息</strong></td><td>選你喜歡的框架，符合 A2A 即可</td></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="quote-box" style="margin-top: 40px; text-align: center;">
+                <p class="quote-text" style="font-size: 28px;">
+                    用 <span style="color: #4fc3f7;">MCP</span> 搞定工具連接 · 用 <span style="color: #ffc107;">A2A</span> 搞定平台連接
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Break Slide -->
+<div class="slide section-divider" style="background: linear-gradient(135deg, #1a1a2e 0%, #2d2d2d 100%);">
+    <span class="section-number">☕</span>
+    <div class="section-name">休息時間</div>
+    <div class="section-desc">10 分鐘後回來</div>
+    <div class="time-badge" style="position: absolute; top: 40px; right: 60px;">17:15-17:25</div>
+</div>
+
+<!-- Section 4: AAIF Platform -->
+<div class="slide section-divider" style="background: linear-gradient(135deg, #1a1a2e 0%, #4a1a4a 100%);">
+    <span class="section-number">04</span>
+    <div class="section-name">介紹 AAIF 平台</div>
+    <div class="section-desc">核心功能與跨團隊協作範例</div>
+    <div class="time-badge" style="position: absolute; top: 40px; right: 60px;">20 分鐘</div>
+</div>
+
+<!-- Slide 13: AAIF Core Functions -->
+<div class="slide">
+    <div class="slide-header">
+        <div>
+            <div class="section-title">Section 4 · AAIF 平台</div>
+            <h1 class="slide-title">AAIF 核心職責</h1>
+        </div>
+        <div class="time-badge">17:25-17:45</div>
+    </div>
+    <div class="slide-content">
+        <div class="content-full">
+            <div class="card-grid card-grid-3">
+                <div class="card" style="border-left: 4px solid #4fc3f7;">
+                    <div class="card-icon">🔍</div>
+                    <div class="card-title">Agent Registry & Discovery</div>
+                    <p class="card-desc">實現 Agent Registry 與動態識別可用 Agents</p>
+                    <div style="background: rgba(79,195,247,0.1); padding: 10px; border-radius: 8px; margin-top: 15px;">
+                        <small style="color: #4fc3f7;">👉 你不用管怎麼被找到，註冊就好</small>
+                    </div>
+                </div>
+                <div class="card" style="border-left: 4px solid #ffc107;">
+                    <div class="card-icon">🧠</div>
+                    <div class="card-title">Plan & Execute</div>
+                    <p class="card-desc">統一入口與路由決策<br>LLM-based 意圖辨識，根據 Agent 能力拆解與指派任務</p>
+                    <div style="background: rgba(255,193,7,0.1); padding: 10px; border-radius: 8px; margin-top: 15px;">
+                        <small style="color: #ffc107;">👉 你不用寫意圖判斷，專注領域邏輯</small>
+                    </div>
+                </div>
+                <div class="card" style="border-left: 4px solid #4caf50;">
+                    <div class="card-icon">📡</div>
+                    <div class="card-title">State Streaming</div>
+                    <p class="card-desc">整合 Open WebUI Pipe Function<br>根據 A2A EventQueue 傳遞 Agents 的即時狀態給前端</p>
+                    <div style="background: rgba(76,175,80,0.1); padding: 10px; border-radius: 8px; margin-top: 15px;">
+                        <small style="color: #4caf50;">👉 你的思考過程能即時顯示在 UI 上</small>
+                    </div>
+                </div>
+            </div>
+            <div class="quote-box" style="margin-top: 30px;">
+                <p style="font-size: 20px;">
+                    <strong style="color: #e94560;">Protocol-first (A2A Protocol)</strong>：
+                    兼容不同 Agent 開發框架提供的 A2A Agent Server
+                    <br><small style="color: #888;">ex: LangChain, Semantic Kernel, CrewAI, Google ADK</small>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 14: Cross-team Example -->
+<div class="slide">
+    <div class="slide-header">
+        <div>
+            <div class="section-title">Section 4 · AAIF 平台</div>
+            <h1 class="slide-title">跨團隊協作範例</h1>
+        </div>
+        <div class="time-badge">17:25-17:45</div>
+    </div>
+    <div class="slide-content">
+        <div class="content-full">
+            <div class="quote-box" style="text-align: center; margin-bottom: 30px;">
+                <p style="font-size: 22px; color: #fff;">使用者輸入：「<span class="highlight">幫我查昨天那個 Bug 並更新 Wiki</span>」</p>
+            </div>
+            <div class="diagram" style="min-height: auto; padding: 30px;">
+                <div style="display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap;">
+                    <!-- Step 1 -->
+                    <div style="text-align: center;">
+                        <div style="background: #4fc3f7; color: #1a1a2e; padding: 15px 20px; border-radius: 10px; font-weight: 600;">
+                            👤 User
+                        </div>
+                        <small style="color: #888; display: block; margin-top: 5px;">發送請求</small>
+                    </div>
+                    <div class="diagram-arrow">→</div>
+                    
+                    <!-- Step 2 -->
+                    <div style="text-align: center;">
+                        <div style="background: #ffc107; color: #1a1a2e; padding: 15px 20px; border-radius: 10px; font-weight: 600;">
+                            🧠 Supervisor
+                        </div>
+                        <small style="color: #888; display: block; margin-top: 5px;">意圖辨識</small>
+                    </div>
+                    <div class="diagram-arrow">→</div>
+                    
+                    <!-- Step 3 -->
+                    <div style="text-align: center;">
+                        <div style="background: #9c27b0; padding: 15px 20px; border-radius: 10px; font-weight: 600;">
+                            🎫 JIRA Agent
+                        </div>
+                        <small style="color: #4caf50; display: block; margin-top: 5px;">Team A · LangChain</small>
+                    </div>
+                    <div class="diagram-arrow">→</div>
+                    
+                    <!-- Step 4 -->
+                    <div style="text-align: center;">
+                        <div style="background: #673ab7; padding: 15px 20px; border-radius: 10px; font-weight: 600;">
+                            📚 Wiki Agent
+                        </div>
+                        <small style="color: #4caf50; display: block; margin-top: 5px;">Team B · LangChain</small>
+                    </div>
+                    <div class="diagram-arrow">→</div>
+                    
+                    <!-- Step 5 -->
+                    <div style="text-align: center;">
+                        <div style="background: #4caf50; color: #1a1a2e; padding: 15px 20px; border-radius: 10px; font-weight: 600;">
+                            ✅ Result
+                        </div>
+                        <small style="color: #888; display: block; margin-top: 5px;">綜合回傳</small>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 20px; margin-top: 30px;">
+                <div style="flex: 1; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; text-align: center;">
+                    <div style="font-size: 36px; margin-bottom: 10px;">🔄</div>
+                    <p style="color: #fff; font-weight: 600;">不同團隊開發</p>
+                    <small style="color: #888;">各自負責各自的 Agent</small>
+                </div>
+                <div style="flex: 1; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; text-align: center;">
+                    <div style="font-size: 36px; margin-bottom: 10px;">🛠️</div>
+                    <p style="color: #fff; font-weight: 600;">可能用不同框架</p>
+                    <small style="color: #888;">LangChain, Semantic Kernel...</small>
+                </div>
+                <div style="flex: 1; background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; text-align: center;">
+                    <div style="font-size: 36px; margin-bottom: 10px;">✨</div>
+                    <p style="color: #fff; font-weight: 600;">在 AAIF 上完美協作</p>
+                    <small style="color: #888;">這就是 A2A Protocol 的威力</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section 5: Standards -->
+<div class="slide section-divider" style="background: linear-gradient(135deg, #1a1a2e 0%, #4a2020 100%);">
+    <span class="section-number">05</span>
+    <div class="section-name">建立上線標準共識</div>
+    <div class="section-desc">規範介面，不規範實作</div>
+    <div class="time-badge" style="position: absolute; top: 40px; right: 60px;">10 分鐘</div>
+</div>
+
+<!-- Slide 15: Standards -->
+<div class="slide">
+    <div class="slide-header">
+        <div>
+            <div class="section-title">Section 5 · 上線標準</div>
+            <h1 class="slide-title">上線標準：介面 > 實作</h1>
+        </div>
+        <div class="time-badge">17:45-17:55</div>
+    </div>
+    <div class="slide-content">
+        <div class="content-left">
+            <h2 style="color: #4caf50;">✓ 必要標準</h2>
+            <ul class="checklist">
+                <li class="required">
+                    <div>
+                        <strong style="color: #fff;">A2A Protocol</strong>
+                        <p style="font-size: 14px; color: #888; margin: 5px 0 0;">才能被 Supervisor 發現和調度</p>
+                    </div>
+                </li>
+                <li class="required">
+                    <div>
+                        <strong style="color: #fff;">Langfuse Trace</strong>
+                        <p style="font-size: 14px; color: #888; margin: 5px 0 0;">統一的除錯與監控，出問題能追蹤</p>
+                    </div>
+                </li>
+            </ul>
+
+            <h2 style="color: #ffc107; margin-top: 30px;">⭐ 建議但不強制</h2>
+            <ul class="checklist">
+                <li>
+                    <div>
+                        <strong style="color: #fff;">M.A.S.K. Template</strong>
+                        <p style="font-size: 14px; color: #888; margin: 5px 0 0;">我們提供的 LangChain wrapper，降低開發門檻</p>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <strong style="color: #fff;">MCP 連接工具</strong>
+                        <p style="font-size: 14px; color: #888; margin: 5px 0 0;">如果有現成 MCP Server，優先使用</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="content-right">
+            <div class="diagram" style="height: 100%;">
+                <h3 style="color: #fff; margin-bottom: 30px;">我們的承諾</h3>
+                <div style="width: 100%;">
+                    <div style="background: rgba(76,175,80,0.2); border: 2px solid #4caf50; border-radius: 12px; padding: 25px; margin-bottom: 20px;">
+                        <div style="font-size: 24px; margin-bottom: 10px;">🔓</div>
+                        <div style="font-size: 20px; font-weight: 600; color: #4caf50;">自由</div>
+                        <p style="color: #ccc; font-size: 16px;">用任何你喜歡的框架開發 Agent</p>
+                    </div>
+                    <div style="background: rgba(79,195,247,0.2); border: 2px solid #4fc3f7; border-radius: 12px; padding: 25px; margin-bottom: 20px;">
+                        <div style="font-size: 24px; margin-bottom: 10px;">📏</div>
+                        <div style="font-size: 20px; font-weight: 600; color: #4fc3f7;">標準</div>
+                        <p style="color: #ccc; font-size: 16px;">MCP 搞定工具、A2A 搞定平台</p>
+                    </div>
+                    <div style="background: rgba(255,193,7,0.2); border: 2px solid #ffc107; border-radius: 12px; padding: 25px;">
+                        <div style="font-size: 24px; margin-bottom: 10px;">🎯</div>
+                        <div style="font-size: 20px; font-weight: 600; color: #ffc107;">專注</div>
+                        <p style="color: #ccc; font-size: 16px;">你讓 Agent 變聰明，平台帶使用者給你</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Section 6: Homework -->
+<div class="slide section-divider" style="background: linear-gradient(135deg, #1a1a2e 0%, #1a3a5c 100%);">
+    <span class="section-number">06</span>
+    <div class="section-name">回家作業</div>
+    <div class="section-desc">為下週實作課程做準備</div>
+    <div class="time-badge" style="position: absolute; top: 40px; right: 60px;">5 分鐘</div>
+</div>
+
+<!-- Slide 16: Homework -->
+<div class="slide">
+    <div class="slide-header">
+        <div>
+            <div class="section-title">Section 6 · 回家作業</div>
+            <h1 class="slide-title">回家作業</h1>
+        </div>
+        <div class="time-badge">17:55-18:00</div>
+    </div>
+    <div class="slide-content">
+        <div class="content-full">
+            <div class="homework-grid">
+                <div class="homework-card">
+                    <div class="homework-number">作業 1</div>
+                    <div class="homework-title">🧠 思考你的 Domain</div>
+                    <div class="homework-desc">
+                        你的單位有什麼重複性高的工作，可以用 Agent 自動化？<br>
+                        這個 Agent 需要什麼工具能力？
+                    </div>
+                </div>
+                <div class="homework-card">
+                    <div class="homework-number">作業 2</div>
+                    <div class="homework-title">🔍 研究現有 MCP Server</div>
+                    <div class="homework-desc">
+                        去 <a href="https://github.com/modelcontextprotocol/servers" style="color: #4fc3f7;">MCP Server 列表</a> 看看<br>
+                        你的資料源是否已有現成實作？（GitHub, PostgreSQL, Slack...）
+                    </div>
+                </div>
+                <div class="homework-card">
+                    <div class="homework-number">作業 3</div>
+                    <div class="homework-title">📚 自學 OCW 內容</div>
+                    <div class="homework-desc">
+                        • <strong>MCP 深度解析</strong>：理解「Agent 界的 USB 標準」<br>
+                        • <strong>Agent Skills</strong>：知識層 vs. 工具層<br>
+                        • <strong>Multi-Agent 生態系</strong>：下週實作會用到
+                    </div>
+                </div>
+                <div class="homework-card">
+                    <div class="homework-number">作業 4</div>
+                    <div class="homework-title">💻 準備開發環境</div>
+                    <div class="homework-desc">
+                        Workshop 2 會用 <strong>M.A.S.K. Template</strong> 帶大家寫第一個能連上 AAIF 的 Agent<br>
+                        請先確認 Python 環境已就緒
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide 17: Summary -->
+<div class="slide">
+    <div class="slide-header">
+        <div>
+            <div class="section-title">Wrap Up</div>
+            <h1 class="slide-title">今日重點回顧</h1>
+        </div>
+    </div>
+    <div class="slide-content">
+        <div class="content-full">
+            <div style="display: flex; gap: 30px;">
+                <div style="flex: 1;">
+                    <div class="card" style="height: 100%; border-top: 4px solid #4fc3f7;">
+                        <h3 style="color: #4fc3f7;">1️⃣ 現狀</h3>
+                        <p>DevOps 工具很強大<br>但使用者體驗破碎<br>開發者重複造輪子</p>
+                    </div>
+                </div>
+                <div style="flex: 1;">
+                    <div class="card" style="height: 100%; border-top: 4px solid #ffc107;">
+                        <h3 style="color: #ffc107;">2️⃣ 目標</h3>
+                        <p>AAIF 提供<br><strong>統一 UI</strong> +<br><strong>智慧分派 Supervisor</strong></p>
+                    </div>
+                </div>
+                <div style="flex: 1;">
+                    <div class="card" style="height: 100%; border-top: 4px solid #4caf50;">
+                        <h3 style="color: #4caf50;">3️⃣ 給開發者的承諾</h3>
+                        <p><strong>自由</strong>：選你順手的框架<br><strong>標準</strong>：MCP + A2A<br><strong>專注</strong>：你負責大腦</p>
+                    </div>
+                </div>
+            </div>
+            <div class="quote-box" style="margin-top: 40px; text-align: center;">
+                <p class="quote-text" style="font-size: 32px;">
+                    One Interface, Connect All
+                </p>
+                <p class="quote-author">AAIF — 自由開發，統一體驗</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Thank You Slide -->
+<div class="slide thankyou-slide">
+    <div class="big-text">Thank You!</div>
+    <p style="font-size: 24px; color: #888;">有問題歡迎隨時提問</p>
+    <div class="next-workshop">
+        <h3>📅 Next: Workshop 2</h3>
+        <p style="color: #ccc;">Hands-on Agent Development</p>
+        <p style="color: #888; font-size: 16px;">2/9 (一) 16:00~18:00 · 環境建置 & 開發</p>
+    </div>
+</div>
+
+<!-- Navigation -->
+<div class="nav-container">
+    <button class="nav-btn" onclick="prevSlide()">◀ 上一頁</button>
+    <button class="nav-btn" onclick="nextSlide()">下一頁 ▶</button>
+</div>
+<div class="slide-counter">
+    <span id="currentSlide">1</span> / <span id="totalSlides">19</span>
+</div>
+<div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+</div>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    document.getElementById('totalSlides').textContent = totalSlides;
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.remove('active');
+            if (i === index) {
+                slide.classList.add('active');
+            }
+        });
+        document.getElementById('currentSlide').textContent = index + 1;
+        document.getElementById('progressBar').style.width = ((index + 1) / totalSlides * 100) + '%';
+    }
+
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        showSlide(currentSlide);
+    }
+
+    function prevSlide() {
+        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+        showSlide(currentSlide);
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+            nextSlide();
+        } else if (e.key === 'ArrowLeft') {
+            prevSlide();
+        } else if (e.key === 'Home') {
+            currentSlide = 0;
+            showSlide(currentSlide);
+        } else if (e.key === 'End') {
+            currentSlide = totalSlides - 1;
+            showSlide(currentSlide);
+        }
+    });
+
+    // Touch/swipe support
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+    });
+
+    document.addEventListener('touchend', (e) => {
+        const touchEndX = e.changedTouches[0].clientX;
+        const diff = touchStartX - touchEndX;
+        if (Math.abs(diff) > 50) {
+            if (diff > 0) {
+                nextSlide();
+            } else {
+                prevSlide();
+            }
+        }
+    });
+
+    // Initialize
+    showSlide(0);
+</script>
+```
+
+</body>
+</html>
