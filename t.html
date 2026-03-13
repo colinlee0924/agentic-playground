@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>JIRA Agent Skills</title>
+<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@200;300;400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #03030d;
+  --cyan: #22d3ee; --cyan-dim: rgba(34,211,238,0.12);
+  --amber: #f59e0b; --amber-dim: rgba(245,158,11,0.12);
+  --green: #34d399; --green-dim: rgba(52,211,153,0.12);
+  --rose: #fb7185;
+  --text: #e2e8f0; --dim: rgba(226,232,240,0.45);
+  --border: rgba(226,232,240,0.08);
+}
+html, body { width:100%; height:100%; overflow:hidden; background:var(--bg); color:var(--text); font-family:'Oxanium',sans-serif; }
+
+/* Grid bg */
+body::before {
+content:’’; position:fixed; inset:0; z-index:0;
+background-image: linear-gradient(var(–border) 1px,transparent 1px), linear-gradient(90deg,var(–border) 1px,transparent 1px);
+background-size: 64px 64px;
+mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, rgba(0,0,0,0.4) 0%, transparent 100%);
+}
+/* Radial glow behind content */
+body::after {
+content:’’; position:fixed; inset:0; z-index:0;
+background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(34,211,238,0.04) 0%, transparent 70%);
+pointer-events:none;
+}
+
+#particleCanvas { position:fixed; inset:0; z-index:2; pointer-events:none; }
+
+.scene {
+position:fixed; inset:0; z-index:3;
+display:flex; flex-direction:column; align-items:center; justify-content:center;
+opacity:0; transition:opacity 0.7s ease; pointer-events:none;
+}
+.scene.active { opacity:1; pointer-events:all; }
+
+/* ===== SCENE 1: INTRO ===== */
+#s1 .tag {
+font-size:10px; letter-spacing:0.4em; text-transform:uppercase; color:var(–cyan);
+border:1px solid rgba(34,211,238,0.3); padding:5px 16px; border-radius:100px;
+margin-bottom:32px;
+opacity:0; animation:fadeUp 0.6s 0.4s forwards;
+}
+#s1 h1 {
+font-size:clamp(64px,10vw,120px); font-weight:800; line-height:0.9; text-align:center;
+opacity:0; animation:fadeUp 0.8s 0.8s forwards;
+}
+#s1 h1 .grad {
+background:linear-gradient(135deg, var(–cyan) 0%, var(–green) 100%);
+-webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+#s1 .sub {
+margin-top:28px; font-size:17px; font-weight:300; color:var(–dim); letter-spacing:0.05em;
+opacity:0; animation:fadeUp 0.6s 1.3s forwards;
+}
+.orb-ring {
+position:absolute; border-radius:50%; border:1px solid rgba(34,211,238,0.15);
+animation:orb-spin 8s linear infinite; pointer-events:none;
+}
+.orb-ring:nth-child(1){width:500px;height:500px;}
+.orb-ring:nth-child(2){width:380px;height:380px;animation-direction:reverse;animation-duration:5s;border-color:rgba(34,211,238,0.08);}
+.orb-center {
+position:absolute; width:180px; height:180px; border-radius:50%;
+background:radial-gradient(circle,rgba(34,211,238,0.15),transparent 70%);
+animation:pulse-core 3s ease-in-out infinite;
+}
+
+/* ===== SCENE 2: PROBLEM ===== */
+#s2 h2 {
+font-size:clamp(24px,3.5vw,42px); font-weight:700; text-align:center; margin-bottom:48px;
+opacity:0; animation:fadeUp 0.6s 0.2s forwards;
+}
+#s2 h2 em { color:var(–rose); font-style:normal; }
+.prob-layout {
+display:grid; grid-template-columns:1fr 60px 1fr; gap:24px; align-items:center;
+max-width:960px; width:92%;
+}
+.bu-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.bu-chip {
+padding:10px 8px; border-radius:10px; border:1px solid var(–border);
+font-size:11px; font-weight:600; text-align:center; letter-spacing:0.05em;
+opacity:0; animation:pop 0.4s forwards;
+color:var(–dim);
+}
+.bu-chip.c { border-color:var(–cyan); color:var(–cyan); background:var(–cyan-dim); }
+.bu-chip.a { border-color:var(–amber); color:var(–amber); background:var(–amber-dim); }
+.bu-chip.g { border-color:var(–green); color:var(–green); background:var(–green-dim); }
+.arrow-center { text-align:center; font-size:28px; color:var(–dim); opacity:0; animation:fadeIn 0.4s 1.2s forwards; }
+.mcp-fail {
+border:1px solid rgba(251,113,133,0.4); border-radius:18px; padding:28px 24px;
+background:rgba(251,113,133,0.04); opacity:0; animation:fadeUp 0.5s 1s forwards;
+}
+.mcp-fail .label { font-size:10px; letter-spacing:0.3em; color:var(–rose); margin-bottom:14px; text-align:center; }
+.mcp-fail .line {
+font-size:12px; font-family:‘JetBrains Mono’,monospace; color:var(–dim);
+padding:6px 0; border-bottom:1px solid var(–border);
+}
+.mcp-fail .x { text-align:center; font-size:36px; color:var(–rose); margin-top:16px; animation:pulse-x 1.2s ease-in-out infinite; }
+.prob-note {
+margin-top:28px; font-size:12px; font-family:‘JetBrains Mono’,monospace; color:var(–dim); text-align:center;
+opacity:0; animation:fadeUp 0.4s 1.8s forwards;
+}
+.prob-note span { color:var(–rose); }
+
+/* ===== SCENE 3: INSIGHT ===== */
+#s3 h2 {
+font-size:clamp(22px,3.5vw,44px); font-weight:700; text-align:center; margin-bottom:52px;
+opacity:0; animation:fadeUp 0.6s 0.2s forwards; line-height:1.3;
+}
+#s3 h2 em { color:var(–cyan); font-style:normal; }
+.skill-showcase { display:flex; gap:28px; align-items:stretch; }
+.sk-card {
+width:185px; border-radius:18px; padding:24px 18px; border:1px solid; text-align:center;
+opacity:0; transform:translateY(32px) scale(0.95); transition:all 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+.sk-card.vis { opacity:1; transform:translateY(0) scale(1); }
+.sk-card.hw { border-color:var(–amber); background:var(–amber-dim); }
+.sk-card.sw { border-color:var(–cyan); background:var(–cyan-dim); }
+.sk-card.mfg { border-color:var(–green); background:var(–green-dim); }
+.sk-card .ic { font-size:36px; margin-bottom:12px; }
+.sk-card .nm { font-size:13px; font-weight:700; letter-spacing:0.04em; }
+.sk-card .lines { margin-top:12px; font-family:‘JetBrains Mono’,monospace; font-size:10px; color:var(–dim); line-height:1.8; text-align:left; }
+.sk-card .lines span { display:block; }
+.sk-card .file-tag {
+margin-top:14px; font-size:9px; font-family:‘JetBrains Mono’,monospace; letter-spacing:0.1em;
+padding:4px 8px; border-radius:4px; display:inline-block;
+}
+.sk-card.hw .file-tag { background:rgba(245,158,11,0.15); color:var(–amber); }
+.sk-card.sw .file-tag { background:rgba(34,211,238,0.15); color:var(–cyan); }
+.sk-card.mfg .file-tag { background:rgba(52,211,153,0.15); color:var(–green); }
+#s3 .foot { margin-top:40px; font-size:12px; font-family:‘JetBrains Mono’,monospace; color:var(–dim); opacity:0; animation:fadeUp 0.5s 2s forwards; }
+
+/* ===== SCENE 4: DEMO ===== */
+.demo-wrap { display:grid; grid-template-columns:1fr 180px 1fr; gap:0; align-items:center; max-width:1080px; width:94%; height:86vh; }
+
+.col-q { display:flex; flex-direction:column; justify-content:center; gap:14px; padding:20px; }
+.q-bub {
+border:1px solid var(–border); border-radius:12px 12px 12px 3px;
+padding:14px 16px; font-size:13px; line-height:1.5;
+opacity:0; transform:translateX(-24px); transition:all 0.45s ease;
+background:rgba(255,255,255,0.02);
+}
+.q-bub.show { opacity:1; transform:translateX(0); }
+.q-bub.active-q { border-color:currentColor; }
+.q-bub .bu-b {
+font-size:9px; letter-spacing:0.15em; padding:2px 8px; border-radius:4px; margin-bottom:8px; display:inline-block; font-weight:700;
+}
+
+.col-agent { display:flex; flex-direction:column; align-items:center; gap:20px; }
+.agent-vis { position:relative; width:130px; height:130px; }
+.ring {
+position:absolute; top:50%; left:50%; border-radius:50%; border:1px solid;
+transform:translate(-50%,-50%);
+}
+.ring1 { width:130px;height:130px; border-color:rgba(34,211,238,0.35); animation:spin 6s linear infinite; }
+.ring2 { width:100px;height:100px; border-color:rgba(34,211,238,0.2); animation:spin 4s linear infinite reverse; }
+.ring3 { width:72px;height:72px; border-color:rgba(34,211,238,0.5); }
+.agent-emoji {
+position:absolute; top:50%;left:50%; transform:translate(-50%,-50%);
+width:52px;height:52px; border-radius:50%;
+background:radial-gradient(circle,rgba(34,211,238,0.35),rgba(34,211,238,0.05));
+display:flex;align-items:center;justify-content:center; font-size:24px;
+transition:background 0.6s ease, box-shadow 0.6s ease;
+}
+.skill-pills { display:flex; flex-direction:column; gap:8px; width:100%; }
+.s-pill {
+display:flex; align-items:center; gap:8px; padding:9px 12px; border-radius:10px;
+border:1px solid var(–border); font-size:11px; font-weight:600;
+opacity:0.35; transition:all 0.35s ease; cursor:default;
+}
+.s-pill.on { opacity:1; transform:scale(1.04); }
+.s-pill.hw-p.on { border-color:var(–amber); background:var(–amber-dim); color:var(–amber); }
+.s-pill.sw-p.on { border-color:var(–cyan); background:var(–cyan-dim); color:var(–cyan); }
+.s-pill.mfg-p.on { border-color:var(–green); background:var(–green-dim); color:var(–green); }
+.s-pill .p-icon { font-size:14px; }
+.s-pill .p-status { margin-left:auto; font-size:8px; font-family:‘JetBrains Mono’,monospace; opacity:0; transition:opacity 0.3s; padding:2px 6px; border-radius:3px; background:rgba(255,255,255,0.07); }
+.s-pill.on .p-status { opacity:1; }
+.status-bar {
+font-size:10px; font-family:‘JetBrains Mono’,monospace; color:var(–dim);
+letter-spacing:0.1em; min-height:16px; text-align:center; transition:color 0.3s;
+}
+
+.col-a { display:flex; flex-direction:column; justify-content:center; gap:14px; padding:20px; }
+.a-bub {
+border:1px solid rgba(34,211,238,0.15); border-radius:12px 12px 3px 12px;
+padding:14px 16px; font-size:12px; font-family:‘JetBrains Mono’,monospace;
+opacity:0; transform:translateX(24px); transition:all 0.45s ease 0.2s;
+background:rgba(34,211,238,0.03);
+}
+.a-bub.show { opacity:1; transform:translateX(0); }
+.a-bub .a-hd { font-family:‘Oxanium’,sans-serif; font-size:10px; font-weight:700; letter-spacing:0.1em; margin-bottom:8px; }
+.a-bub .a-line { color:var(–dim); line-height:1.85; font-size:11px; }
+.a-bub .a-line b { color:var(–text); font-weight:700; }
+
+/* Demo header */
+.demo-head {
+position:absolute; top:5%; left:50%; transform:translateX(-50%);
+font-size:10px; letter-spacing:0.3em; color:var(–dim); text-transform:uppercase;
+opacity:0; animation:fadeIn 0.5s 0.3s forwards;
+}
+
+/* ===== SCENE 5: PAYOFF ===== */
+#s5 h2 {
+font-size:clamp(22px,3.5vw,42px); font-weight:700; text-align:center; margin-bottom:48px;
+opacity:0; animation:fadeUp 0.6s 0.2s forwards;
+}
+#s5 h2 em { color:var(–cyan); font-style:normal; }
+.payoff-row { display:flex; gap:24px; max-width:920px; width:92%; }
+.p-card {
+flex:1; border-radius:20px; padding:32px 22px; border:1px solid var(–border);
+background:rgba(255,255,255,0.02); text-align:center;
+opacity:0; transform:translateY(24px); transition:all 0.5s cubic-bezier(0.34,1.2,0.64,1);
+}
+.p-card.vis { opacity:1; transform:translateY(0); }
+.p-card.bu { border-color:var(–amber); }
+.p-card.user { border-color:var(–cyan); }
+.p-card.plat { border-color:var(–green); }
+.p-card .p-ico { font-size:42px; margin-bottom:14px; }
+.p-card .p-role { font-size:9px; letter-spacing:0.3em; text-transform:uppercase; color:var(–dim); margin-bottom:10px; }
+.p-card .p-val { font-size:15px; font-weight:600; line-height:1.45; }
+.p-card .p-det { font-size:11px; font-family:‘JetBrains Mono’,monospace; color:var(–dim); margin-top:10px; line-height:1.7; }
+
+/* ===== CONTROLS ===== */
+#ctrl {
+position:fixed; bottom:22px; left:50%; transform:translateX(-50%);
+z-index:10; display:flex; flex-direction:column; align-items:center; gap:12px;
+}
+#playBtn {
+background:var(–cyan); color:#03030d; border:none;
+padding:11px 30px; border-radius:100px;
+font-family:‘Oxanium’,sans-serif; font-size:13px; font-weight:800; letter-spacing:0.1em;
+cursor:pointer; transition:all 0.2s; box-shadow:0 0 24px rgba(34,211,238,0.3);
+}
+#playBtn:hover { transform:scale(1.06); box-shadow:0 0 36px rgba(34,211,238,0.45); }
+.dots { display:flex; gap:10px; align-items:center; }
+.d {
+width:7px;height:7px;border-radius:50%; background:rgba(255,255,255,0.15);
+cursor:pointer; transition:all 0.3s;
+}
+.d.on { background:var(–cyan); transform:scale(1.4); box-shadow:0 0 8px var(–cyan); }
+.d.done { background:rgba(34,211,238,0.35); }
+.hint { font-size:9px; letter-spacing:0.2em; color:rgba(255,255,255,0.2); text-transform:uppercase; }
+
+/* ===== KEYFRAMES ===== */
+@keyframes fadeUp { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes pop { 0%{opacity:0;transform:scale(0.8)} 100%{opacity:1;transform:scale(1)} }
+@keyframes pulse-core { 0%,100%{transform:scale(1)} 50%{transform:scale(1.08)} }
+@keyframes pulse-x { 0%,100%{transform:scale(1)} 50%{transform:scale(1.12)} }
+@keyframes orb-spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+@keyframes spin { from{transform:translate(-50%,-50%) rotate(0)} to{transform:translate(-50%,-50%) rotate(360deg)} }
+</style>
+
+</head>
+<body>
+<canvas id="particleCanvas"></canvas>
+
+<!-- S1: INTRO -->
+
+<div class="scene active" id="s1">
+  <div class="orb-center"></div>
+  <div class="orb-ring"></div>
+  <div class="orb-ring"></div>
+  <div class="tag">JIRA × AI — Platform Vision 2026</div>
+  <h1>Agent<br><span class="grad">Skills</span></h1>
+  <p class="sub">讓每個事業單位的 Agent，說自己的語言</p>
+</div>
+
+<!-- S2: PROBLEM -->
+
+<div class="scene" id="s2">
+  <h2>通用 MCP 無法理解<br><em>各 BU 的業務邏輯</em></h2>
+  <div class="prob-layout">
+    <div>
+      <div class="bu-grid" id="buGrid"></div>
+    </div>
+    <div class="arrow-center">→</div>
+    <div class="mcp-fail">
+      <div class="label">⚙ JIRA MCP — GENERIC</div>
+      <div class="line">P1 = 高優先 (通用定義)</div>
+      <div class="line" style="opacity:.55">無 BU 業務邏輯</div>
+      <div class="line" style="opacity:.35">不知道 HW vs SW 差異</div>
+      <div class="line" style="opacity:.2">欄位語意？不懂</div>
+      <div class="x">✕</div>
+    </div>
+  </div>
+  <p class="prob-note">15 個 BU × 各自的 Priority 定義、術語、欄位邏輯 → <span>通用答案沒有價值</span></p>
+</div>
+
+<!-- S3: INSIGHT -->
+
+<div class="scene" id="s3">
+  <h2>如果 Agent 可以<em>按需載入</em><br>每個 BU 的業務知識呢？</h2>
+  <div class="skill-showcase">
+    <div class="sk-card hw" id="sk1">
+      <div class="ic">🔧</div>
+      <div class="nm">HW BU Skill</div>
+      <div class="lines">
+        <span>▸ P1 = 影響出貨</span>
+        <span>▸ fixVersion, HWVersion</span>
+        <span>▸ 出貨風險 JQL</span>
+      </div>
+      <div class="file-tag">SKILL.md</div>
+    </div>
+    <div class="sk-card sw" id="sk2">
+      <div class="ic">💻</div>
+      <div class="nm">SW BU Skill</div>
+      <div class="lines">
+        <span>▸ P1 = Sprint Blocker</span>
+        <span>▸ story points, sprint</span>
+        <span>▸ 卡關 = Blocked ≥5d</span>
+      </div>
+      <div class="file-tag">SKILL.md</div>
+    </div>
+    <div class="sk-card mfg" id="sk3">
+      <div class="ic">🏭</div>
+      <div class="nm">MFG BU Skill</div>
+      <div class="lines">
+        <span>▸ ECO / MCN tracking</span>
+        <span>▸ 量產議題欄位</span>
+        <span>▸ 核准流程 JQL</span>
+      </div>
+      <div class="file-tag">SKILL.md</div>
+    </div>
+  </div>
+  <p class="foot">BU Owner 自行維護 SKILL.md — 不需要懂 LangChain，不需要寫 Prompt</p>
+</div>
+
+<!-- S4: DEMO -->
+
+<div class="scene" id="s4">
+  <div class="demo-head" id="demoHead">▶ LIVE DEMO — 動態 Skill 載入</div>
+  <div class="demo-wrap">
+    <!-- Queries -->
+    <div class="col-q">
+      <div class="q-bub" id="qb1">
+        <div class="bu-b" style="background:var(--amber-dim);color:var(--amber);">HW BU USER</div>
+        <div>這個月出貨風險的 P1 有哪些？</div>
+      </div>
+      <div class="q-bub" id="qb2">
+        <div class="bu-b" style="background:var(--cyan-dim);color:var(--cyan);">SW BU USER</div>
+        <div>Sprint 卡關超過 5 天的單？</div>
+      </div>
+      <div class="q-bub" id="qb3">
+        <div class="bu-b" style="background:var(--green-dim);color:var(--green);">MFG BU USER</div>
+        <div>本週新開的 ECO 議題有幾張？</div>
+      </div>
+    </div>
+
+```
+<!-- Agent -->
+<div class="col-agent">
+  <div class="agent-vis">
+    <div class="ring ring1"></div>
+    <div class="ring ring2"></div>
+    <div class="ring ring3"></div>
+    <div class="agent-emoji" id="agentEmoji">🤖</div>
+  </div>
+  <div class="status-bar" id="statusBar"></div>
+  <div class="skill-pills">
+    <div class="s-pill hw-p" id="sp1"><span class="p-icon">🔧</span> HW Skill <span class="p-status">LOADED</span></div>
+    <div class="s-pill sw-p" id="sp2"><span class="p-icon">💻</span> SW Skill <span class="p-status">LOADED</span></div>
+    <div class="s-pill mfg-p" id="sp3"><span class="p-icon">🏭</span> MFG Skill <span class="p-status">LOADED</span></div>
+  </div>
+</div>
+
+<!-- Answers -->
+<div class="col-a">
+  <div class="a-bub" id="ab1">
+    <div class="a-hd" style="color:var(--amber)">🔧 HW BU 業務邏輯套用</div>
+    <div class="a-line">
+      依 HW BU：<b>P1 = 影響出貨</b><br>
+      找到 <b>3 張</b> 出貨風險單<br>
+      ├ HW-4521 <b>⚠ dueDate -2d</b><br>
+      ├ HW-4489 assignee: Jason<br>
+      └ HW-4477 Waiting for QA
+    </div>
+  </div>
+  <div class="a-bub" id="ab2">
+    <div class="a-hd" style="color:var(--cyan)">💻 SW BU 業務邏輯套用</div>
+    <div class="a-line">
+      依 SW BU：<b>卡關 = Blocked ≥ 5d</b><br>
+      Sprint: <b>SW-2026-Q1-S3</b><br>
+      找到 <b>2 張</b> 卡關單<br>
+      └ ISS-2341 <b>8 story pts ⚠</b>
+    </div>
+  </div>
+  <div class="a-bub" id="ab3">
+    <div class="a-hd" style="color:var(--green)">🏭 MFG BU 業務邏輯套用</div>
+    <div class="a-line">
+      本週新開 ECO：<b>4 張</b><br>
+      ├ MFG-0882 ECO-2026-031<br>
+      ├ MFG-0881 待核准<br>
+      └ 含 <b>MCN tracking</b> 欄位
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+</div>
+
+<!-- S5: PAYOFF -->
+
+<div class="scene" id="s5">
+  <h2>相同 Agent，<em>按需切換</em> BU 大腦</h2>
+  <div class="payoff-row">
+    <div class="p-card bu" id="pc1">
+      <div class="p-ico">📝</div>
+      <div class="p-role">BU Owner</div>
+      <div class="p-val">自己寫 SKILL.md<br>自己定義業務邏輯</div>
+      <div class="p-det">不需要懂 LangChain<br>不需要寫 Prompt<br>Git 版控，自行維護</div>
+    </div>
+    <div class="p-card user" id="pc2">
+      <div class="p-ico">💬</div>
+      <div class="p-role">9,000 位使用者</div>
+      <div class="p-val">用中文說<br>Agent 懂你的 BU 語言</div>
+      <div class="p-det">不用學 JQL<br>不用記欄位名稱<br>說業務術語就行</div>
+    </div>
+    <div class="p-card plat" id="pc3">
+      <div class="p-ico">⚙️</div>
+      <div class="p-role">Platform（你）</div>
+      <div class="p-val">一個 Agent<br>15 個 BU 的專家</div>
+      <div class="p-det">Skills 模組化<br>動態載入，無需<br>為每個 BU 部署</div>
+    </div>
+  </div>
+</div>
+
+<!-- Controls -->
+
+<div id="ctrl">
+  <button id="playBtn">▶ 開始展示</button>
+  <div class="dots">
+    <div class="d on" data-i="0"></div>
+    <div class="d" data-i="1"></div>
+    <div class="d" data-i="2"></div>
+    <div class="d" data-i="3"></div>
+    <div class="d" data-i="4"></div>
+  </div>
+  <div class="hint">← → 切換 · Space 播放</div>
+</div>
+
+<script>
+// === PARTICLE SYSTEM ===
+const pc = document.getElementById('particleCanvas');
+const ctx = pc.getContext('2d');
+let pts = [];
+
+function resize() { pc.width = innerWidth; pc.height = innerHeight; }
+resize(); window.addEventListener('resize', resize);
+
+function bez(t,a,b,c,d) {
+  const m=1-t; return m*m*m*a+3*m*m*t*b+3*m*t*t*c+t*t*t*d;
+}
+
+function spawnFlow(from, to, col, n=38) {
+  for (let i=0;i<n;i++) {
+    const spread = 70;
+    pts.push({
+      sx:from.x, sy:from.y, tx:to.x, ty:to.y,
+      c1x: from.x+(to.x-from.x)*0.3+(Math.random()-.5)*spread,
+      c1y: from.y+(Math.random()-.5)*spread*2,
+      c2x: from.x+(to.x-from.x)*0.7+(Math.random()-.5)*spread,
+      c2y: to.y+(Math.random()-.5)*spread*2,
+      p:0, delay:i*0.022,
+      spd: 0.013+Math.random()*0.009,
+      col, sz:1.8+Math.random()*2.2
+    });
+  }
+}
+
+function ctr(el) {
+  const r=el.getBoundingClientRect();
+  return {x:r.left+r.width/2, y:r.top+r.height/2};
+}
+
+(function loop(){
+  ctx.clearRect(0,0,pc.width,pc.height);
+  pts = pts.filter(p=>{
+    p.p += 0.016;
+    if(p.p < p.delay) return true;
+    const t = Math.min((p.p-p.delay)/1.3, 1);
+    p.p += p.spd;
+    if(t>=1) return false;
+    const x=bez(t,p.sx,p.c1x,p.c2x,p.tx);
+    const y=bez(t,p.sy,p.c1y,p.c2y,p.ty);
+    const a = t<0.12 ? t/0.12 : t>0.82 ? (1-t)/0.18 : 1;
+    ctx.save();
+    ctx.globalAlpha = a*0.85;
+    ctx.shadowBlur=14; ctx.shadowColor=p.col;
+    ctx.fillStyle=p.col;
+    ctx.beginPath(); ctx.arc(x,y,p.sz,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+    return true;
+  });
+  requestAnimationFrame(loop);
+})();
+
+// === SCENE MANAGER ===
+const SCENES = ['s1','s2','s3','s4','s5'];
+const DURS   = [2800, 4500, 4200, 12500, 6000];
+let cur=0, playing=false, timer=null;
+
+function go(i, fromPlay=false) {
+  if(i<0||i>=SCENES.length) return;
+  document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));
+  document.getElementById(SCENES[i]).classList.add('active');
+  document.querySelectorAll('.d').forEach((d,j)=>{
+    d.className='d'+(j===i?' on':j<i?' done':'');
+  });
+  cur=i;
+  enter(i);
+  if(playing) {
+    clearTimeout(timer);
+    timer=setTimeout(()=>{
+      if(cur<SCENES.length-1) go(cur+1,true);
+      else { playing=false; document.getElementById('playBtn').textContent='↺ 重播'; }
+    }, DURS[i]);
+  }
+}
+
+function enter(i) {
+  if(i===1) s2Init();
+  if(i===2) s3Init();
+  if(i===3) s4Init();
+  if(i===4) s5Init();
+}
+
+// === S2 ===
+function s2Init() {
+  const g=document.getElementById('buGrid'); g.innerHTML='';
+  const bus=[
+    ['HW BU','a'],['SW BU','c'],['MFG BU','g'],
+    ['ISS BU',''],['QA BU',''],['PM BU',''],
+    ['RD BU',''],['ENG BU',''],['OPS BU',''],
+  ];
+  bus.forEach(([n,c],i)=>{
+    const el=document.createElement('div');
+    el.className=`bu-chip ${c}`;
+    el.style.animationDelay=`${0.3+i*0.11}s`;
+    el.textContent=n;
+    g.appendChild(el);
+  });
+}
+
+// === S3 ===
+function s3Init() {
+  ['sk1','sk2','sk3'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    el.classList.remove('vis');
+    setTimeout(()=>el.classList.add('vis'), 500+i*180);
+  });
+}
+
+// === S4 DEMO ===
+const steps=[
+  {qId:'qb1',spId:'sp1',aId:'ab1',col:'#f59e0b',
+   bg:'radial-gradient(circle,rgba(245,158,11,0.35),rgba(245,158,11,0.05))',
+   glow:'0 0 32px rgba(245,158,11,0.5)',
+   load:'LOADING: bu-hardware/SKILL.md'},
+  {qId:'qb2',spId:'sp2',aId:'ab2',col:'#22d3ee',
+   bg:'radial-gradient(circle,rgba(34,211,238,0.35),rgba(34,211,238,0.05))',
+   glow:'0 0 32px rgba(34,211,238,0.5)',
+   load:'LOADING: bu-software/SKILL.md'},
+  {qId:'qb3',spId:'sp3',aId:'ab3',col:'#34d399',
+   bg:'radial-gradient(circle,rgba(52,211,153,0.35),rgba(52,211,153,0.05))',
+   glow:'0 0 32px rgba(52,211,153,0.5)',
+   load:'LOADING: bu-manufacturing/SKILL.md'},
+];
+
+function s4Init() {
+  document.querySelectorAll('.q-bub,.a-bub').forEach(e=>e.classList.remove('show'));
+  document.querySelectorAll('.s-pill').forEach(e=>e.classList.remove('on'));
+  document.getElementById('statusBar').textContent='';
+  const ae=document.getElementById('agentEmoji');
+  ae.style.background='radial-gradient(circle,rgba(34,211,238,0.35),rgba(34,211,238,0.05))';
+  ae.style.boxShadow='';
+  // show queries
+  setTimeout(()=>{
+    document.getElementById('qb1').classList.add('show');
+    setTimeout(()=>document.getElementById('qb2').classList.add('show'),180);
+    setTimeout(()=>document.getElementById('qb3').classList.add('show'),360);
+  },400);
+  setTimeout(()=>runStep(0), 1300);
+}
+
+function runStep(i) {
+  if(i>=steps.length){
+    // loop
+    setTimeout(()=>{
+      document.querySelectorAll('.a-bub').forEach(e=>e.classList.remove('show'));
+      document.querySelectorAll('.s-pill').forEach(e=>e.classList.remove('on'));
+      document.getElementById('statusBar').textContent='';
+      const ae=document.getElementById('agentEmoji');
+      ae.style.background='radial-gradient(circle,rgba(34,211,238,0.35),rgba(34,211,238,0.05))';
+      ae.style.boxShadow='';
+      setTimeout(()=>runStep(0),800);
+    },2500);
+    return;
+  }
+  const s=steps[i];
+  const sb=document.getElementById('statusBar');
+  const sp=document.getElementById(s.spId);
+  const ae=document.getElementById('agentEmoji');
+
+  // highlight query
+  document.querySelectorAll('.q-bub').forEach(e=>e.style.opacity='0.4');
+  document.getElementById(s.qId).style.opacity='1';
+
+  // activate pill
+  document.querySelectorAll('.s-pill').forEach(e=>e.classList.remove('on'));
+  sp.classList.add('on');
+  sb.style.color=s.col;
+  sb.textContent=s.load;
+
+  // particles: pill → agent
+  setTimeout(()=>{
+    spawnFlow(ctr(sp), ctr(ae), s.col, 42);
+    setTimeout(()=>{
+      ae.style.background=s.bg;
+      ae.style.boxShadow=s.glow;
+      sb.textContent='✓ SKILL LOADED';
+      setTimeout(()=>{
+        sb.textContent='';
+        document.getElementById(s.aId).classList.add('show');
+        setTimeout(()=>runStep(i+1), 3200);
+      },600);
+    },1100);
+  },250);
+}
+
+// === S5 ===
+function s5Init() {
+  ['pc1','pc2','pc3'].forEach((id,i)=>{
+    const el=document.getElementById(id);
+    el.classList.remove('vis');
+    setTimeout(()=>el.classList.add('vis'),400+i*160);
+  });
+}
+
+// === CONTROLS ===
+document.getElementById('playBtn').addEventListener('click',()=>{
+  if(!playing){
+    playing=true;
+    document.getElementById('playBtn').textContent='⏸ 播放中';
+    go(0);
+  } else {
+    playing=false; clearTimeout(timer);
+    document.getElementById('playBtn').textContent='▶ 繼續';
+  }
+});
+
+document.querySelectorAll('.d').forEach((d,i)=>{
+  d.addEventListener('click',()=>{
+    clearTimeout(timer); playing=true;
+    document.getElementById('playBtn').textContent='⏸ 播放中';
+    go(i);
+  });
+});
+
+window.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '){
+    e.preventDefault(); clearTimeout(timer); playing=true;
+    document.getElementById('playBtn').textContent='⏸ 播放中';
+    go(Math.min(cur+1,SCENES.length-1));
+  }
+  if(e.key==='ArrowLeft'){
+    clearTimeout(timer);
+    go(Math.max(cur-1,0));
+  }
+});
+</script>
+
+</body>
+</html>
